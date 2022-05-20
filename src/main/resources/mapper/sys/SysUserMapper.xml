@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.sys.mapper.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.eta.modules.sys.model.SysUser">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="dept_id" property="deptId" jdbcType="INTEGER"/>
+        <result column="post_id" property="postId" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+        <result column="dept_id" property="deptId" jdbcType="INTEGER"/>
+        <result column="is_sys_user" property="isSysUser" jdbcType="VARCHAR"/>
+        <result column="role_id" property="roleId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="getIsNotOwner" resultMap="BaseResultMap">
+        SELECT u.*
+        from sys_user u
+        where u.`status`=1
+        and id not in
+        (SELECT ur.user_id
+        from sys_user_role ur
+        )
+        <if test="keyword!=null and keyword!=''">
+            and u.username like '%${keyword}%'
+        </if>
+    </select>
+    <select id="getIsOwner" resultMap="BaseResultMap">
+        SELECT u.*
+        from sys_user_role ur
+        JOIN sys_user u on ur.user_id=u.id
+        where
+        u.`status`=1
+        <if test="roleId!=null">
+            AND ur.role_id=#{roleId}
+        </if>
+        <if test="keyword!=null and keyword!=''">
+            and u.username like '%${keyword}%'
+        </if>
+    </select>
+
+    <select id="getMasterUserByDept" parameterType="int" resultMap="BaseResultMap">
+        SELECT u.*
+        from sys_user u
+                 join sys_dept_user du
+                      on u.id = du.user_id
+        where du.ismaster = 0
+          and du.dept_id = #{deptId}
+    </select>
+
+    <select id="isAllotUserList" parameterType="int" resultMap="BaseResultMap">
+        SELECT u.*
+        from sys_user u
+                 join sys_dept_user du
+        where du.user_id = u.id
+          and du.dept_id = #{deptId}
+        ORDER BY du.ismaster
+    </select>
+
+    <select id="isUnAllotUserList" parameterType="int" resultMap="BaseResultMap">
+        SELECT u.*
+        from sys_user u
+        where id not in (SELECT user_id from sys_dept_user where dept_id = #{deptId})
+    </select>
+
+    <select id="selectUserByDeptId" parameterType="Map" resultMap="BaseResultMap">
+        select
+        t1.id,t1.dept_id,t1.post_id,t1.username,t1.real_name,t1.create_time,t1.email,t1.phone,t1.sex,t1.avatar,t1.birth,t1.address,t1.city,t1.status,t1.is_sys_user
+        from sys_user t1
+        inner join sys_dept t2
+            on t1.dept_id=t2.id
+        <if test="keyword != null and keyword!=''">
+            and (t1.username like '%${keyword}%' or t1.real_name like '%${keyword}%'
+            or t1.phone like '%${keyword}%' or t1.email like '%${keyword}%')
+        </if>
+        <if test="deptId!=null and deptId!=0">
+            AND (t1.dept_id=#{deptId} or t1.dept_id in (select t3.id from sys_dept t3 where
+            FIND_IN_SET(#{deptId},ancestors)))
+        </if>
+    </select>
+    <select id="selectByPK" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select id,dept_id,post_id,username,real_name,create_time,email,phone,sex,avatar,
+               birth,address,city,status,is_sys_user,
+               (select role_id from sys_user_role where user_id = sys_user.id ) as role_id
+        from sys_user
+        where id = #{id}
+    </select>
+
+    <select id="selectUserByRoleId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select t1.id,
+               t1.post_id,
+               t1.dept_id,
+               t1.username,
+               t1.real_name,
+               t1.create_time,
+               t1.email,
+               t1.phone,
+               t1.sex,
+               t1.avatar,
+               t1.birth,
+               t1.address,
+               t1.city,
+               t1.status,
+               t1.is_sys_user
+        from sys_user t1
+        where t1.id in (
+            select user_id
+            from sys_user_role
+            where role_id = #{roleId})
+    </select>
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from sys_user where id in
+        <foreach collection="list" item="arr" open="(" separator="," close=")">
+            #{arr}
+        </foreach>
+    </delete>
+</mapper>

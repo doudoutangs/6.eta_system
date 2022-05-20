@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!--本地数据库驱动jar -->
+    <classPathEntry
+            location="D:\work_soft\maven-respository\mysql\mysql-connector-java\8.0.28\mysql-connector-java-8.0.28.jar" />
+    <!--<properties resource="application.properties"/>-->
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.eta.core.mapper.MyMapper"/>
+        </plugin>
+
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/sp_bank_oa?useUnicode=true&amp;characterEncoding=utf8&amp;useOldAliasMetadataBehavior=true&amp;zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true&amp;serverTimezone=UTC"
+                        userId="root"
+        password="mysql">
+        </jdbcConnection>
+        <!--                        connectionURL="jdbc:mysql://localhost:3306/sp_eta?useUnicode=true&amp;characterEncoding=utf8&amp;useOldAliasMetadataBehavior=true&amp;zeroDateTimeBehavior=convertToNull&amp;allowMultiQueries=true&amp;serverTimezone=UTC"-->
+
+        <javaModelGenerator targetPackage="com.eta.modules.bs.model" targetProject="src/main/java"/>
+
+        <sqlMapGenerator targetPackage="mapper/bs" targetProject="src/main/resources"/>
+
+        <javaClientGenerator targetPackage="com.eta.modules.bs.mapper" targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+
+        <table tableName="oa_work_record">
+            <!--mysql 配置-->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <!--oracle 配置-->
+            <!--<generatedKey column="id" sqlStatement="select SEQ_{1}.nextval from dual" identity="false" type="pre"/>-->
+        </table>
+        <table tableName="oa_leave">
+            <!--mysql 配置-->
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <!--oracle 配置-->
+            <!--<generatedKey column="id" sqlStatement="select SEQ_{1}.nextval from dual" identity="false" type="pre"/>-->
+        </table>
+    </context>
+</generatorConfiguration>

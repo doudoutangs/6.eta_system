@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.bs.mapper.StudentMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.Student" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="id_no" property="idNo" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="class_id" property="classId" jdbcType="VARCHAR" />
+    <result column="major_id" property="majorId" jdbcType="VARCHAR" />
+    <result column="universities_id" property="universitiesId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="VOResultMap" type="com.eta.modules.bs.model.StudentVO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="class_id" property="classId" jdbcType="VARCHAR" />
+    <result column="major_id" property="majorId" jdbcType="VARCHAR" />
+    <result column="universities_id" property="universitiesId" jdbcType="VARCHAR" />
+    <result column="class_name" property="className" jdbcType="VARCHAR" />
+    <result column="major_name" property="majorName" jdbcType="VARCHAR" />
+    <result column="universities_name" property="universitiesName" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="id_no" property="idNo" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="getChildList" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT *
+    from b_student
+    where class_id =#{id}
+  </select>
+  <select id="selectByParam" resultMap="VOResultMap" parameterType="com.eta.modules.bs.model.StudentVO">
+    SELECT s.*,c.name as class_name,m.name as major_name,u.name as universities_name,
+    (select dict_name from sys_dict where dict_value=s.city and dict_level = 'city') as city_name
+    from (
+      select * from b_student
+        <where>
+          <if test="classId!=null and classId !=''">
+            and class_id =#{classId}
+          </if>
+          <if test="majorId!=null and majorId !=''">
+            and major_id =#{majorId}
+          </if>
+          <if test="universitiesId!=null and universitiesId !=''">
+            and universities_id =#{universitiesId}
+          </if>
+          <if test="name!=null and name !=''">
+            and name LIKE CONCAT('%',#{name},'%')
+          </if>
+          <if test="no!=null and no !=''">
+            and no LIKE CONCAT('%',#{no},'%')
+          </if>
+        </where>
+    ) as s
+    left join b_major as m
+    on s.major_id= m.id
+    left join b_universities as u
+    on s.universities_id=u.id
+    left join b_class as c
+    on s.class_id=c.id
+    order by s.create_time desc
+  </select>
+
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from b_student where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+  <select id="statisticsByYear" parameterType="java.lang.String" resultType="java.lang.Long">
+    select count(0)
+    from b_student
+    where class_id in (
+      select id
+      from b_class
+      where term = #{year}
+    )
+  </select>
+  <select id="statisticsGroupByVisitYear" parameterType="java.lang.String" resultType="com.eta.modules.bs.model.StatisVO">
+    select t.term as name ,count(t.id) as total
+    FROM
+    (
+      select s.id,c.term
+      from b_student as s
+      inner join
+        (
+        select id,term
+        from b_class
+        where
+          term in
+          <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+            #{arr}
+          </foreach>
+        )as c
+      on s.class_id = c.id
+    ) as t
+    group by t.term
+  </select>
+</mapper>

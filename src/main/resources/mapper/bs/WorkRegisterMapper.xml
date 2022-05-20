@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.bs.mapper.WorkRegisterMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.WorkRegister" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="student_id" property="studentId" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="work_city" property="workCity" jdbcType="VARCHAR" />
+    <result column="work_address" property="workAddress" jdbcType="VARCHAR" />
+    <result column="company_nature" property="companyNature" jdbcType="VARCHAR" />
+    <result column="salary" property="salary" jdbcType="VARCHAR" />
+    <result column="fit_degree" property="fitDegree" jdbcType="VARCHAR" />
+    <result column="register_date" property="registerDate" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="getByStudentId" resultMap="BaseResultMap" parameterType="int">
+    SELECT *
+    from b_work_register
+    where student_id =#{studentId}
+  </select>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from b_work_register where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+  <select id="statisticsByYear" parameterType="java.lang.String" resultType="java.lang.Long">
+    select count(0) from b_work_register
+    <where>
+      <if test="year!=null and year!=''">
+        register_year= #{year}
+      </if>
+    </where>
+  </select>
+
+  <select id="statisticsGroupByVisitYear" parameterType="java.lang.String" resultType="com.eta.modules.bs.model.StatisVO">
+    select register_year as name,count(0) as total
+    from
+    (select * from b_work_register
+    <where>
+      register_year in
+      <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+        #{arr}
+      </foreach>
+    </where>
+    ) as b_work_register
+    group by register_year
+  </select>
+</mapper>

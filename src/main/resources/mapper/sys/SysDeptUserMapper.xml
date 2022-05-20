@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.sys.mapper.SysDeptUserMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.sys.model.SysDeptUser" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="dept_id" property="deptId" jdbcType="INTEGER" />
+    <result column="ismaster" property="ismaster" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <update id="clearMasterByDept" parameterType="int">
+    update sys_dept_user
+    set ismaster=1
+    where dept_id=#{deptId}
+    <if test="userId!=null">
+      and user_id=#{userId}
+    </if>
+  </update>
+  
+  <update id="setMasterUserByDept">
+    UPDATE sys_dept_user
+    set ismaster=0
+    where dept_id=#{deptId} and user_id=#{userId}
+  </update>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from sys_dept_user where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+
+</mapper>

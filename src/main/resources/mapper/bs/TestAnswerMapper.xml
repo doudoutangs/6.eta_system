@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.bs.mapper.TestAnswerMapper">
+    <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.TestAnswer">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="subject_id1" property="subjectId1" jdbcType="VARCHAR"/>
+        <result column="subject_id2" property="subjectId2" jdbcType="VARCHAR"/>
+        <result column="subject_id3" property="subjectId3" jdbcType="VARCHAR"/>
+        <result column="subject_id4" property="subjectId4" jdbcType="VARCHAR"/>
+        <result column="subject_id5" property="subjectId5" jdbcType="VARCHAR"/>
+        <result column="subject_id6" property="subjectId6" jdbcType="VARCHAR"/>
+        <result column="subject_id7" property="subjectId7" jdbcType="VARCHAR"/>
+        <result column="visit_year" property="visitYear" jdbcType="VARCHAR" />
+        <result column="student_name" property="studentName" jdbcType="VARCHAR" />
+        <result column="class_name" property="className" jdbcType="VARCHAR" />
+        <result column="major_name" property="majorName" jdbcType="VARCHAR" />
+        <result column="universities_name" property="universitiesName" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <delete id="batchDelete" parameterType="java.util.List">
+        delete from b_test_answer where id in
+        <foreach collection="list" item="arr" open="(" separator="," close=")">
+            #{arr}
+        </foreach>
+    </delete>
+    <select id="getByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select * from b_test_answer where user_id = #{userId}
+    </select>
+    <select id="query" parameterType="com.eta.modules.bs.model.TestAnswer" resultMap="BaseResultMap">
+        select a.id,a.visit_year,s.name as student_name, c.name as class_name,
+               m.name as major_name, u.name as universities_name, a.create_time
+        from
+        (select * from b_test_answer
+            <where>
+                <if test="userId!=null and userId!=''">
+                    user_id=#{userId}
+                </if>
+                <if test="visitYear!=null and visitYear!='-1'">
+                    and visit_year= #{visitYear}
+                </if>
+                <if test="subjectId2!=null and subjectId2!='-1'" >
+                    and subject_id2= #{subjectId2}
+                </if>
+            </where>
+        )a
+         inner join b_student s
+        on a.user_id = s.id
+         left join b_major as m
+           on s.major_id = m.id
+         left join b_universities as u
+           on s.universities_id = u.id
+         left join b_class as c
+           on s.class_id = c.id
+    </select>
+
+    <select id="statisticsByYear" parameterType="java.lang.String" resultType="java.lang.Long">
+        select count(0) from b_test_answer
+        <where>
+            <if test="year!=null and year!=''">
+                visit_year= #{year}
+            </if>
+        </where>
+    </select>
+    <select id="statisticsByYearAndWork" parameterType="java.lang.String" resultType="java.lang.Long">
+        select count(0) from b_test_answer
+        <where>
+            subject_id2 =1
+            <if test="year!=null and year!=''">
+                and visit_year= #{year}
+            </if>
+        </where>
+    </select>
+    <select id="statisticsGroupByVisitYear" parameterType="com.eta.modules.bs.model.TestAnswer" resultType="com.eta.modules.bs.model.StatisVO">
+        select visit_year as name,count(0) as total
+        from
+        (select * from b_test_answer
+        <where>
+            <if test="subjectId2!=null and subjectId2!=''">
+                subject_id2= #{subjectId2}
+            </if>
+           and  visit_year in
+            <foreach collection="yearList" item="arr" open="(" separator="," close=")">
+                #{arr}
+            </foreach>
+        </where>
+        ) as b_test_answer
+        group by visit_year
+    </select>
+</mapper>

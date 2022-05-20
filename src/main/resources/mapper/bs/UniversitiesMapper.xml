@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.bs.mapper.UniversitiesMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.Universities" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="VARCHAR" />
+    <result column="principal" property="principal" jdbcType="VARCHAR" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from b_universities where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+
+  <select id="getAllOrg" resultType="com.eta.modules.bs.model.OrgTree">
+    select id,name,no as code,major_id as parentId,false as open from b_class
+    union
+    select id,name,no as code,universities_id as parentId,false as open from b_major
+    union
+    select id,name,no as code,'-1' as parentId,false as open from b_universities
+  </select>
+</mapper>

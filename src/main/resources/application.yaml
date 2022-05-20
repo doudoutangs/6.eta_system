@@ -1,0 +1,49 @@
+server:
+  port: 8805
+
+spring:
+  application:
+    name: eta-system
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/sp_eta?useUnicode=true&characterEncoding=utf8&useOldAliasMetadataBehavior=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&serverTimezone=UTC&serverTimezone=Asia/Shanghai
+    username: root
+    password: mysql
+  freemarker:
+    cache: false
+    charset: UTF-8
+    content-type: text/html; charset=utf-8
+    request-context-attribute: request
+    suffix: .ftl
+    template-loader-path: classpath:/templates
+  mvc:
+    static-path-pattern: /static/**
+  servlet:
+    multipart:
+      max-file-size: 1024000
+      max-request-size: 1024000
+  thymeleaf:
+    cache: false
+
+logging:
+  file:
+    path: ./logs
+  level:
+    com:
+      eta:
+        modules: debug
+    root: info
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.eta.modules.*.entity
+
+
+system:
+  user:
+    default:
+      password: 123456
+
+fileTemplate:
+  path: C:\\

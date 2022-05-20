@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.bs.mapper.MajorMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.Major" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="universities_id" property="universitiesId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="VARCHAR" />
+    <result column="no" property="no" jdbcType="VARCHAR" />
+    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+    <result column="birth" property="birth" jdbcType="VARCHAR" />
+    <result column="year" property="year" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="getChildList" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT *
+    from b_major
+    where universities_id =#{id}
+    order by sort asc
+  </select>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from b_major where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+</mapper>

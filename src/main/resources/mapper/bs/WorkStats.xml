@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.bs.mapper.WorkStatsMapper">
+    <select id="cityStats" resultType="com.eta.modules.bs.model.Stats" parameterType="com.eta.modules.bs.model.StatsReq">
+        select name, value
+        FROM (
+                 select t2.dict_name as name,#{year} as year,ifnull(t1.salary, 0.0) as value
+                 FROM (
+                     select w.work_city,TRUNCATE(avg (w.salary),2) salary
+                     from b_work_register w
+                        <where>
+                            <if test="year!=null and year!=''">
+                                register_year = #{year}
+                            </if>
+                        </where>
+                     group by w.work_city
+                     ) t1
+                     RIGHT JOIN
+                     (select * from sys_dict where dict_level = 'city' and parent_id !=-1) t2
+                 on t1.work_city = t2.dict_value
+             ) as t
+        order by t.value desc
+    </select>
+    <select id="companyNature" resultType="com.eta.modules.bs.model.Stats" parameterType="com.eta.modules.bs.model.StatsReq">
+        select t2.dict_name as name, ifnull(t1.num, 0) as value
+        from
+            (
+            select wr.company_nature, count(1)as num
+            from b_work_register as wr
+            <where>
+                <if test="year!=null and year!=''">
+                    register_year = #{year}
+                </if>
+            </where>
+            group by wr.company_nature
+            ) as t1
+            RIGHT JOIN
+            (select * from sys_dict where dict_level = 'company_nature' and parent_id !=-1) as t2
+        on t1.company_nature = t2.dict_value
+    </select>
+
+    <select id="universitiesStats" resultType="com.eta.modules.bs.model.Stats" parameterType="com.eta.modules.bs.model.StatsReq">
+        select t2.name,ifnull(t1.num ,0)as value from
+        (
+            select tmp.universities_id ,count(1) as num from
+            (
+            select wr.student_id, wr.work_city, wr.company_nature, wr.salary, wr.fit_degree,
+                stu.class_id,c.name as className,
+                m.id as major_id, m.name as majorName,
+                u.id as universities_id, u.name as universitiesName
+            from
+                (select * from b_work_register
+                    <where>
+                    <if test="year!=null and year!=''">
+                        register_year = #{year}
+                    </if>
+                    </where>
+                )as wr
+            left join b_student as stu
+                on wr.student_id = stu.id
+            LEFT JOIN b_class as c
+                on c.id = stu.class_id
+            left JOIN b_major as m
+                on m.id = c.major_id
+            left JOIN b_universities as u
+                on u.id = m.universities_id
+            ) as tmp
+            group by tmp.universities_id
+        ) as t1
+        RIGHT JOIN b_universities as t2
+        on t1.universities_id = t2.id
+    </select>
+    <select id="majorStats" resultType="com.eta.modules.bs.model.Stats">
+        select t2.name,ifnull(t1.num ,0)as value from
+        (
+            select tmp.major_id ,count(1) as num from
+            (
+                select wr.student_id, wr.work_city, wr.company_nature, wr.salary, wr.fit_degree,
+                    m.id as major_id, m.name as majorName,
+                    u.id as universities_id,u.name as universitiesName,
+                    c.name as className,stu.class_id
+                from b_work_register as wr
+                left join b_student as stu
+                    on wr.student_id = stu.id
+                LEFT JOIN b_class as c
+                    on c.id = stu.class_id
+                left JOIN b_major as m
+                    on m.id = c.major_id
+                left JOIN b_universities as u
+                    on u.id = m.universities_id
+            ) as tmp
+            group by tmp.major_id
+            ) as t1 RIGHT JOIN b_major as t2
+        on t1.major_id = t2.id
+    </select>
+    <select id="classStats" resultType="com.eta.modules.bs.model.Stats">
+        select t2.name,ifnull(t1.num ,0)as value from
+            (
+            select tmp.class_id ,count(1) as num from
+            (
+            select wr.student_id, wr.work_city, wr.company_nature, wr.salary, wr.fit_degree,
+            stu.class_id, m.id as major_id, u.id as universities_id, c.name as className, m.name as majorName, u.name as universitiesName
+            from b_work_register as wr
+            left join b_student as stu
+            on wr.student_id = stu.id
+            LEFT JOIN b_class as c
+            on c.id = stu.class_id
+            left JOIN b_major as m
+            on m.id = c.major_id
+            left JOIN b_universities as u
+            on u.id = m.universities_id
+            ) as tmp
+            group by tmp.class_id
+            ) as t1 RIGHT JOIN b_class as t2
+        on t1.class_id = t2.id
+    </select>
+</mapper>

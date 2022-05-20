@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eta.modules.bs.mapper.NoticeMapper">
+  <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.Notice">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="release_date" jdbcType="VARCHAR" property="releaseDate" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from b_notice where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+</mapper>

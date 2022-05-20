@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eta.modules.bs.mapper.SchoolClassMapper">
+    <resultMap id="BaseResultMap" type="com.eta.modules.bs.model.SchoolClass">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="major_id" jdbcType="VARCHAR" property="majorId"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="start_date" jdbcType="VARCHAR" property="startDate"/>
+        <result column="end_date" jdbcType="VARCHAR" property="endDate"/>
+        <result column="teacher_id" jdbcType="INTEGER" property="teacherId"/>
+        <result column="no" jdbcType="VARCHAR" property="no"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <select id="getChildList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT *
+        from b_class
+        where major_id = #{id}
+        order by sort asc
+    </select>
+    <delete id="batchDelete" parameterType = "java.util.List">
+        delete from b_class where id in
+        <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+            #{arr}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.sys.mapper.SysMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.sys.model.SysMenu" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="TINYINT" />
+    <result column="is_show" property="isShow" jdbcType="TINYINT" />
+    <result column="permission" property="permission" jdbcType="VARCHAR" />
+    <result column="menu_type" property="menuType" jdbcType="VARCHAR" />
+    <result column="is_sys_menu" property="isSysMenu" jdbcType="VARCHAR" />
+    <result column="is_link" property="isLink" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="getTopList" resultMap="BaseResultMap">
+    SELECT *
+    from sys_menu
+    where parent_id =0 and is_show=0 and menu_type in('direc','menu','api') order by sort
+  </select>
+
+  <select id="getOperationMenuTop" resultMap="BaseResultMap">
+     SELECT *
+    from sys_menu
+    where parent_id =0 and is_show=0 and menu_type in('direc','menu') order by sort
+  </select>
+
+  <select id="getChildDeptList" resultMap="BaseResultMap" parameterType="int">
+    SELECT *
+    from sys_menu
+    where parent_id =#{id} and is_show=0 and menu_type in('direc','menu','api') order by sort
+  </select>
+
+  <select id="getSelMenuPermission" parameterType="int" resultMap="BaseResultMap">
+    SELECT m.*
+    from sys_menu m
+    JOIN sys_menu_role smr
+    ON m.id=smr.menu_id
+    AND smr.role_id=#{roleId}
+  </select>
+
+  <select id="selectMenuListByRoleId" parameterType="Integer" resultType="Integer">
+    select m.id, m.parent_id
+    from sys_menu m
+    left join sys_menu_role rm on m.id = rm.menu_id
+    where rm.role_id = #{roleId}
+    order by m.parent_id, m.sort
+  </select>
+
+  <select id="selectAllMenu" resultMap="BaseResultMap">
+    select * from sys_menu order by sort
+  </select>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from sys_menu where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+</mapper>

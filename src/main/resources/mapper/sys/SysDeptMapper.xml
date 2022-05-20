@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eta.modules.sys.mapper.SysDeptMapper" >
+  <resultMap id="BaseResultMap" type="com.eta.modules.sys.model.SysDept" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="ancestors" property="ancestors" jdbcType="VARCHAR" />
+    <result column="leader" property="leader" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="ListTopDept" resultMap="BaseResultMap">
+    SELECT *
+    from sys_dept
+    where parent_id is NULL
+  </select>
+
+  <select id="getChildDeptList" resultMap="BaseResultMap" parameterType="int">
+    SELECT *
+    from sys_dept
+    where parent_id =#{id}
+    order by sort asc
+  </select>
+  
+  <select id="selectDeptById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select * from sys_dept where id=#{parentId}
+  </select>
+
+  <select id="selectChildrenDeptById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from sys_dept where find_in_set(#{id}, ancestors)
+  </select>
+
+  <update id="updateDeptChildren" parameterType="java.util.List">
+    update sys_dept set ancestors =
+    <foreach collection="depts" item="item" index="index"
+             separator=" " open="case id" close="end">
+      when #{item.id} then #{item.ancestors}
+    </foreach>
+    where id in
+    <foreach collection="depts" item="item" index="index"
+             separator="," open="(" close=")">
+      #{item.id}
+    </foreach>
+  </update>
+  <delete id="batchDelete" parameterType = "java.util.List">
+    delete from sys_dept where id in
+    <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+      #{arr}
+    </foreach>
+  </delete>
+</mapper>

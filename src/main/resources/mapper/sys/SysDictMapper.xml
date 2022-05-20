@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eta.modules.sys.mapper.SysDictMapper">
+    <resultMap id="BaseResultMap" type="com.eta.modules.sys.model.SysDict">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="dict_name" jdbcType="VARCHAR" property="dictName"/>
+        <result column="dict_value" jdbcType="VARCHAR" property="dictValue"/>
+        <result column="dict_level" jdbcType="INTEGER" property="dictLevel"/>
+        <result column="status" property="status" jdbcType="CHAR"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="dict_sort" jdbcType="INTEGER" property="dictSort"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <select id="getDictByValueAndLevel" resultMap="BaseResultMap">
+        SELECT *
+        from sys_dict
+        where dict_value = #{dictValue}
+          and dict_level = #{dictLevel}
+          and status = 0
+    </select>
+    <select id="getDictByDictValue" resultMap="BaseResultMap">
+
+        SELECT *
+        FROM sys_dict t
+        where t.parent_id in (
+            SELECT id
+            from sys_dict
+            where dict_value = #{dictValue}
+              and status = 0
+        )
+          and t.status = 0
+        order by dict_sort
+    </select>
+    <delete id="batchDelete" parameterType = "java.util.List">
+        delete from sys_dict where id in
+        <foreach collection="list" item="arr"  open="(" separator="," close=")" >
+            #{arr}
+        </foreach>
+    </delete>
+</mapper>

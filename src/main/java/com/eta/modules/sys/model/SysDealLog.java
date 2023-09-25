@@ -7,7 +7,7 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 /**
- * @author 553039957@qq.com
+ * @author QQ:553039957
  * 1. gitcode主页： https://gitcode.net/tbb414 （推荐）
  * 2. github主页：https://github.com/doudoutangs
  * 3. gitee(码云)主页：https://gitee.com/spdoudoutang

@@ -7,6 +7,13 @@ import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
+/**
+ * @author 553039957@qq.com
+ * 1. gitcode主页： https://gitcode.net/tbb414 （推荐）
+ * 2. github主页：https://github.com/doudoutangs
+ * 3. gitee(码云)主页：https://gitee.com/spdoudoutang
+ * @Date: 2023/9/25 14:30
+ */
 @Data
 @Table(name = "sys_user")
 public class SysUser extends BaseEntity {

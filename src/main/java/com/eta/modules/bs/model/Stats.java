@@ -3,10 +3,13 @@ package com.eta.modules.bs.model;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import lombok.Data;
-
 /**
- * Created by sugar on 2021/12/7.
+ * @author 553039957@qq.com
+ * 1. gitcode主页： https://gitcode.net/tbb414 （推荐）
+ * 2. github主页：https://github.com/doudoutangs
+ * 3. gitee(码云)主页：https://gitee.com/spdoudoutang
  */
+
 @Data
 public class Stats {
     String year;

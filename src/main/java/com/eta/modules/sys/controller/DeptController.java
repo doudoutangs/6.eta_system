@@ -18,7 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * @author 553039957@qq.com
+ * 1. gitcode主页： https://gitcode.net/tbb414 （推荐）
+ * 2. github主页：https://github.com/doudoutangs
+ * 3. gitee(码云)主页：https://gitee.com/spdoudoutang
+ * @Date: 2023/9/25 14:30
+ */
 @RestController
 @RequestMapping("/sys/dept")
 public class DeptController {

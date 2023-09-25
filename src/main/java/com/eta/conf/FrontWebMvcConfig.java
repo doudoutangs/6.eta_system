@@ -28,6 +28,13 @@ import javax.servlet.MultipartConfigElement;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * @author 553039957@qq.com
+ * 1. gitcode主页： https://gitcode.net/tbb414 （推荐）
+ * 2. github主页：https://github.com/doudoutangs
+ * 3. gitee(码云)主页：https://gitee.com/spdoudoutang
+ * @Date: 2023/9/25 14:29
+ */
 @Configuration
 public class FrontWebMvcConfig implements WebMvcConfigurer {
 
@@ -131,17 +138,12 @@ public class FrontWebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        String[] excludes=new String[]{"/","/toLogin","/toError",
-                "/showRegister","/sys/login/signIn","/sys/login/logout","/error","/main","/static/**",
+        String[] excludes = new String[]{"/", "/toLogin", "/toError",
+                "/showRegister", "/sys/login/signIn", "/sys/login/logout", "/error", "/main", "/static/**",
                 "/v2/api-docs"
         };
         registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns(excludes);
     }
-
-
-
-
-
 
 
     @Bean(name = "validator")
@@ -172,7 +174,6 @@ public class FrontWebMvcConfig implements WebMvcConfigurer {
     public RequestContextListener requestContextListener() {
         return new RequestContextListener();
     }
-
 
 
     @Override

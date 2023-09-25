@@ -3,6 +3,7 @@ package com.eta.conf;
 
 import com.eta.modules.sys.model.SysUser;
 
+
 public class SysUserContext {
 	private static final ThreadLocal<SysUser> USER_HODLER = new ThreadLocal<SysUser>();
     

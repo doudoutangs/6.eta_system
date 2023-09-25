@@ -3,8 +3,8 @@ package com.eta.modules.bs.model;
 import com.eta.core.entity.BaseEntity;
 import lombok.Data;
 
-import java.util.Date;
 import javax.persistence.*;
+
 @Data
 @Table(name = "b_analysis_report")
 public class AnalysisReport   extends BaseEntity {

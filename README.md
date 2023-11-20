@@ -161,15 +161,15 @@
 ![启动项目](https://raw.githubusercontent.com/doudoutangs/eta_system/main/%E5%B0%B1%E4%B8%9A%E7%AE%A1%E7%90%86/0-4-%E5%90%AF%E5%8A%A8%E9%A1%B9%E7%9B%AE.jpg)
 4. 访问：http://localhost:8805（账号admin/admin）
 
-## 六、说明
-1. QQ:553039957
-2. gitcode主页： https://gitcode.net/tbb414 (推荐)
-3. github主页：https://github.com/doudoutangs
-4. gitee(码云)主页：https://gitee.com/spdoudoutang
+## 六、源码说明
+0. QQ:553039957
+1. gitcode主页： https://gitcode.com/user/tbb414 (推荐)
+2. github主页：https://github.com/doudoutangs
+3. gitee(码云)主页：https://gitee.com/doudoutang
 ## 七、其他项目
-1. [人事管理系统](https://gitcode.net/tbb414//person_system)
-2. [薪资管理系统](https://gitcode.net/tbb414//salary_system)
-3. [OA系统](https://gitcode.net/tbb414//oa_system)
-4. [招投标管理系统](https://gitcode.net/tbb414//bid_system)
-5. [绩效考核系统](https://gitcode.net/tbb414//assess_system)
+1. [人事管理系统](https://gitcode.com/tbb414/person_system)
+2. [薪资管理系统](https://gitcode.com/tbb414/salary_system)
+3. [OA系统](https://gitcode.com/tbb414/oa_system)
+4. [招投标管理系统](https://gitcode.com/tbb414/bid_system)
+5. [绩效考核系统](https://gitcode.com/tbb414/assess_system)
 6. [就业管理系统](https://gitcode.net/tbb414/eta_system)

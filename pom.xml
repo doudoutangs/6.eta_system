@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.eta</groupId>
     <artifactId>eta_system</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>eta_system</name>
     <parent>
         <groupId>org.springframework.boot</groupId>
